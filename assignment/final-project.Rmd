@@ -1,0 +1,82 @@
+---
+title: "California ISO Electric Grid Data Analysis"
+author: "Michaela Palmer, Melissa Ferriter"
+output: github_document
+---
+
+```{r setup, include=T}
+knitr::opts_chunk$set(echo = T, warning = F, message = F)
+```
+
+```{r results='hide'}
+libs <- c("tidyverse", "readxl", "ggpubr")
+sapply(libs, require, character.only=T)
+```
+
+## Read in data
+
+The data used in this analsyis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html), which aggregates grid data from electricity producers in California.
+
+june
+july
+oct
+nov
+jan
+feb
+
+
+```{r}
+#regex methods
+#sapply(strsplit(filelist, "[/_]"), "[", 6)
+#sub(".*(\\d{8}).*", "\\1", filelist)
+
+#sub(".*/", "", sub("_.*", "", filelist))
+
+#sub("_.*", "", basename(filelist))
+
+```
+
+
+```{r }
+filelist <-
+  c(
+    "http://content.caiso.com/green/renewrpt/20171015_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20171016_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20171017_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20171018_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20171019_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20171020_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20171021_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20171022_DailyRenewablesWatch.txt"
+  )
+
+import <- function(data) {
+  data.frame(date = sub("_.*", "", basename(filelist)), read_table2( 
+    data,
+    col_names = c(
+      "hour",
+      "geothermal",
+      "biomass",
+      "biogas",
+      "small_hydro",
+      "wind",
+      "solar_pv",
+      "solar_thermal"
+    ),
+    skip = 2,
+    n_max = 24
+  )) 
+}
+
+oct <- do.call("rbind", lapply(filelist, import))
+```
+
+# Daily average data plots
+
+The CAISO data are provided at hourly intervals. Plotting the data for the entire 6-year period would have generated a very messy graph, so I calculated daily means and plotted them instead.
+
+
+```{r}
+
+```
+
