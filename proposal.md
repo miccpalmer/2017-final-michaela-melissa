@@ -3,17 +3,28 @@
 
 Please prepare a short proposal on your final project idea for next **Thursday, Nov 2**. The proposal should include:
 
-- Title & description of the project
-- Your name & partner's name
-- A description of the data required, and how it will be obtained (e.g. URL/DOI to data source)
-- 3 questions / analysis tasks you will perform on the data; in the spirit of the assignments we have been doing.
+# Title & description of the project
+**California ISO Electric Grid Data Analysis**
 
-*You may choose to work with your partner or independently on the final project. Please indicate which clearly in your proposal.*
+# Your name & partner's name
 
-Replicating results of an existing study and exploring the impact of alternative assumptions in the data preparation, statistical methods chosen etc can provide an excellent template for an analysis (you'll see more of this in units 3 & 4)
+- Michaela Palmer, mc-palmer
+- Melissa Ferriter, mferriter
 
+# A description of the data required, and how it will be obtained (e.g. URL/DOI to data source)
 
-Please create your proposal in a markdown file called `proposal.md` in the root directory of the final project repo.  
+-The data used in this analysis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html) renewables watch reports, which aggregates raw grid data from electricity producers in California. 
+-The renewables watch reports provide actual daily renewable production  (at hourly intervals) within the ISO grid.
+
+# 3 questions / analysis tasks you will perform on the data; in the spirit of the assignments we have been doing.
+
+- Clean and aggregate data into usuable forms (daily values --> dataframe per month)
+- EDA
+- Look at daily average renewables generation by source. 
+- Explore high-demand/peak periods during August and September. (Compare with baseload)
+- Explore seasonality/time series (summer irradiance > winter).
+- Quantify the load-following contribution from each of the main generation source (demand vs generation -- Duck Curve)
+- Choropleth maps of substations to show the proportion of electric generation throughout CA. 
 
 
 ## Preliminary Rubric (additional areas will be added)
