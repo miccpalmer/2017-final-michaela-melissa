@@ -3,10 +3,8 @@
 
 ## Team Members:
 
-- full name, github handle
-- full name, github handle
-
-This repository is a template for your team's repository.
+- Michaela Palmer, mc-palmer
+- Melissa Ferriter, mferriter
 
 ## assignment
 
