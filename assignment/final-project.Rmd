@@ -21,11 +21,9 @@ The data used in this analsyis comes from [California Independent System Operato
 # other tested regex methods
 #sapply(strsplit(filelist, "[/_]"), "[", 6)
 #sub(".*(\\d{8}).*", "\\1", filelist)
-
 #sub(".*/", "", sub("_.*", "", filelist))
-
 #sub("_.*", "", basename(filelist))
-
+#gsub("(?:.*/){4}([^_]+)_.*", "\\1", filelist)
 ```
 
 ```{r}
@@ -93,7 +91,7 @@ oct.data <-
 
 ```{r }
 import <- function(data) {
-  data.frame(date = as.Date(sub("_.*", "", basename(data)), "%Y%m%d"), read_table2( 
+  data.frame(date = as.Date(basename(data), "%Y%m%d"), read_table2( 
     data,
     col_names = c(
       "hour",
