@@ -17,16 +17,8 @@ sapply(libs, require, character.only=T)
 
 The data used in this analsyis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html), which aggregates grid data from electricity producers in California.
 
-june
-july
-oct
-nov
-jan
-feb
-
-
 ```{r}
-#regex methods
+# other tested regex methods
 #sapply(strsplit(filelist, "[/_]"), "[", 6)
 #sub(".*(\\d{8}).*", "\\1", filelist)
 
@@ -36,9 +28,55 @@ feb
 
 ```
 
+```{r}
+jan.data <-
+  c(
+    "http://content.caiso.com/green/renewrpt/20170115_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170116_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170117_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170118_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170119_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170120_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170121_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170122_DailyRenewablesWatch.txt"
+  )
+feb.data <-
+  c(
+    "http://content.caiso.com/green/renewrpt/20170215_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170216_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170217_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170218_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170219_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170220_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170321_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170422_DailyRenewablesWatch.txt"
+  )
 
-```{r }
-filelist <-
+june.data <-
+  c(
+    "http://content.caiso.com/green/renewrpt/20170615_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170616_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170617_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170618_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170619_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170620_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170621_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170622_DailyRenewablesWatch.txt"
+  )
+
+july.data <-
+  c(
+    "http://content.caiso.com/green/renewrpt/20170715_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170716_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170717_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170718_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170719_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170720_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170721_DailyRenewablesWatch.txt",
+    "http://content.caiso.com/green/renewrpt/20170722_DailyRenewablesWatch.txt"
+  )
+
+oct.data <-
   c(
     "http://content.caiso.com/green/renewrpt/20171015_DailyRenewablesWatch.txt",
     "http://content.caiso.com/green/renewrpt/20171016_DailyRenewablesWatch.txt",
@@ -50,8 +88,12 @@ filelist <-
     "http://content.caiso.com/green/renewrpt/20171022_DailyRenewablesWatch.txt"
   )
 
+
+```
+
+```{r }
 import <- function(data) {
-  data.frame(date = sub("_.*", "", basename(filelist)), read_table2( 
+  data.frame(date = as.Date(sub("_.*", "", basename(data)), "%Y%m%d"), read_table2( 
     data,
     col_names = c(
       "hour",
@@ -68,7 +110,12 @@ import <- function(data) {
   )) 
 }
 
-oct <- do.call("rbind", lapply(filelist, import))
+jan <- do.call("rbind", lapply(jan.data, import))
+feb <- do.call("rbind", lapply(feb.data, import))
+june <- do.call("rbind", lapply(june.data, import))
+july<- do.call("rbind", lapply(july.data, import))
+oct <- do.call("rbind", lapply(oct.data, import))
+
 ```
 
 # Daily average data plots
