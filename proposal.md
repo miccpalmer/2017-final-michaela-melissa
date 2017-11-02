@@ -15,6 +15,8 @@ Please prepare a short proposal on your final project idea for next **Thursday, 
 
 -The data used in this analysis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html) renewables watch reports, which aggregates raw grid data from electricity producers in California. 
 -The renewables watch reports provide actual daily renewable production  (at hourly intervals) within the ISO grid.
+-Renewable energy sources included in the reports are Solar Thermal, Solar, Wind, Small Hydro, Biogas, Biomass, and Geothermal.
+-An hourly breakdown of total production by resource type is also given for Renewables, Nuclear, Thermal, Imports, and Hydro. 
 
 ### 3 questions / analysis tasks you will perform on the data; in the spirit of the assignments we have been doing.
 
@@ -23,8 +25,10 @@ Please prepare a short proposal on your final project idea for next **Thursday, 
 - Look at daily average renewables generation by source. 
 - Explore high-demand/peak periods during August and September. (Compare with baseload)
 - Explore seasonality/time series (summer irradiance > winter).
-- Quantify the load-following contribution from each of the main generation source (demand vs generation -- Duck Curve)
-- Choropleth maps of substations to show the proportion of electric generation throughout CA. 
+- Quantify the load-following contribution from each of the main generation sources (demand vs generation -- Duck Curve)
+- Choropleth maps of substations to show the proportion of electric generation throughout CA.
+- Explore which renewable sources vary the most over days? months? years? (coefficient of variation)
+- Which sources have the most output during peak (Jan-Feb 4-9pm) and super peak (July-Aug 4-9pm) time frames. (Solar vs. Geothermal)
 
 
 ## Preliminary Rubric (additional areas will be added)
