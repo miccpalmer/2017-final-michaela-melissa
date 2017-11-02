@@ -13,10 +13,10 @@ Please prepare a short proposal on your final project idea for next **Thursday, 
 
 ### A description of the data required, and how it will be obtained (e.g. URL/DOI to data source)
 
--The data used in this analysis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html) renewables watch reports, which aggregates raw grid data from electricity producers in California. 
--The renewables watch reports provide actual daily renewable production  (at hourly intervals) within the ISO grid.
--Renewable energy sources included in the reports are Solar Thermal, Solar, Wind, Small Hydro, Biogas, Biomass, and Geothermal.
--An hourly breakdown of total production by resource type is also given for Renewables, Nuclear, Thermal, Imports, and Hydro. 
+- The data used in this analysis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html) renewables watch reports, which aggregates raw grid data from electricity producers in California. 
+- The renewables watch reports provide actual daily renewable production  (at hourly intervals) within the ISO grid.
+- Renewable energy sources included in the reports are Solar Thermal, Solar, Wind, Small Hydro, Biogas, Biomass, and Geothermal.
+- An hourly breakdown of total production by resource type is also given for Renewables, Nuclear, Thermal, Imports, and Hydro. 
 
 ### 3 questions / analysis tasks you will perform on the data; in the spirit of the assignments we have been doing.
 
