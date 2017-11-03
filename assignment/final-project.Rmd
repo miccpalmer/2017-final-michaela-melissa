@@ -15,7 +15,7 @@ sapply(libs, require, character.only=T)
 
 ## Read in data
 
-The data used in this analsyis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html), which aggregates grid data from electricity producers in California.
+The data used in this analysis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html), which aggregates grid data from electricity producers in California.
 ```{r}
 # create and view an object with file names and full paths
 months <- c("01", "02", "06", "07", "10")
@@ -61,6 +61,10 @@ The CAISO data are provided at hourly intervals. Plotting the data for the entir
 
 
 ```{r}
+
+```
+
+```{r}
 # other tested regex methods
 #sapply(strsplit(filelist, "[/_]"), "[", 6)
 #sub(".*(\\d{8}).*", "\\1", filelist)
@@ -69,5 +73,4 @@ The CAISO data are provided at hourly intervals. Plotting the data for the entir
 #gsub("(?:.*/){4}([^_]+)_.*", "\\1", filelist)
 ```
 
-```
 
