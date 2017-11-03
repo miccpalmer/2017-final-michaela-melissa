@@ -9,87 +9,26 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F)
 ```
 
 ```{r results='hide'}
-libs <- c("tidyverse", "readxl", "ggpubr")
+libs <- c("tidyverse", "readxl", "ggpubr", "foreign")
 sapply(libs, require, character.only=T)
 ```
 
 ## Read in data
 
 The data used in this analsyis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html), which aggregates grid data from electricity producers in California.
-
 ```{r}
-# other tested regex methods
-#sapply(strsplit(filelist, "[/_]"), "[", 6)
-#sub(".*(\\d{8}).*", "\\1", filelist)
-#sub(".*/", "", sub("_.*", "", filelist))
-#sub("_.*", "", basename(filelist))
-#gsub("(?:.*/){4}([^_]+)_.*", "\\1", filelist)
-```
-
-```{r}
-jan.data <-
-  c(
-    "http://content.caiso.com/green/renewrpt/20170115_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170116_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170117_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170118_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170119_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170120_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170121_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170122_DailyRenewablesWatch.txt"
-  )
-feb.data <-
-  c(
-    "http://content.caiso.com/green/renewrpt/20170215_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170216_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170217_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170218_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170219_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170220_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170321_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170422_DailyRenewablesWatch.txt"
-  )
-
-june.data <-
-  c(
-    "http://content.caiso.com/green/renewrpt/20170615_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170616_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170617_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170618_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170619_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170620_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170621_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170622_DailyRenewablesWatch.txt"
-  )
-
-july.data <-
-  c(
-    "http://content.caiso.com/green/renewrpt/20170715_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170716_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170717_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170718_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170719_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170720_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170721_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20170722_DailyRenewablesWatch.txt"
-  )
-
-oct.data <-
-  c(
-    "http://content.caiso.com/green/renewrpt/20171015_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20171016_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20171017_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20171018_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20171019_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20171020_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20171021_DailyRenewablesWatch.txt",
-    "http://content.caiso.com/green/renewrpt/20171022_DailyRenewablesWatch.txt"
-  )
-
+# create and view an object with file names and full paths
+months <- c("01", "02", "06", "07", "10")
+urls <- list()
+for(i in months) {
+  url <- paste0("http://content.caiso.com/green/renewrpt/2017", i, 15:22, "_DailyRenewablesWatch.txt")
+  urls[[paste0("month", i)]] <- url
+}
 
 ```
 
 ```{r }
+# function to import data with proper formatting & columns 
 import <- function(data) {
   data.frame(date = as.Date(basename(data), "%Y%m%d"), read_table2( 
     data,
@@ -108,11 +47,11 @@ import <- function(data) {
   )) 
 }
 
-jan <- do.call("rbind", lapply(jan.data, import))
-feb <- do.call("rbind", lapply(feb.data, import))
-june <- do.call("rbind", lapply(june.data, import))
-july<- do.call("rbind", lapply(july.data, import))
-oct <- do.call("rbind", lapply(oct.data, import))
+jan <- do.call("rbind", lapply(urls[["month01"]], import))
+feb <- do.call("rbind", lapply(urls[["month02"]], import))
+june <- do.call("rbind", lapply(urls[["month6"]], import))
+july<- do.call("rbind", lapply(urls[["month07"]], import))
+oct <- do.call("rbind", lapply(urls[["month10"]], import))
 
 ```
 
@@ -122,6 +61,13 @@ The CAISO data are provided at hourly intervals. Plotting the data for the entir
 
 
 ```{r}
+# other tested regex methods
+#sapply(strsplit(filelist, "[/_]"), "[", 6)
+#sub(".*(\\d{8}).*", "\\1", filelist)
+#sub(".*/", "", sub("_.*", "", filelist))
+#sub("_.*", "", basename(filelist))
+#gsub("(?:.*/){4}([^_]+)_.*", "\\1", filelist)
+```
 
 ```
 
