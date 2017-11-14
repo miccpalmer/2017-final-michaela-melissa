@@ -1,6 +1,6 @@
 ---
 title: "California ISO Electric Grid Data Analysis"
-author: "Michaela Palmer, Melissa Ferriter"
+author: "Michaela Palmer &  Melissa Ferriter"
 output: github_document
 ---
 
