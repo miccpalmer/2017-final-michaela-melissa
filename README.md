@@ -7,7 +7,7 @@
 - Melissa Ferriter, mferriter
 
 ## About:
-Final project proposal 
+Final project 
 
 ## assignment
 
