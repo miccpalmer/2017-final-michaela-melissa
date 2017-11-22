@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F)
 ```
 
 ```{r results='hide'}
-libs <- c("tidyverse", "readxl", "ggpubr", "foreign")
+libs <- c("tidyverse", "readxl", "ggpubr", "foreign", "zoo")
 sapply(libs, require, character.only=T)
 ```
 
@@ -63,7 +63,6 @@ The CAISO data are provided at hourly intervals. Plotting the data for the entir
 
 
 ```{r}
-library(zoo)
 #jan 2017 example plot
 jan[, -c(2)] %>%
     read.zoo(FUN = identity) %>%
