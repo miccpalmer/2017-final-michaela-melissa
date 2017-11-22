@@ -18,10 +18,11 @@ sapply(libs, require, character.only=T)
 The data used in this analysis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html), which aggregates grid data from electricity producers in California.
 ```{r}
 # create and view an object with file names and full paths
-months <- c("01", "02", "06", "07", "10")
+days <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31")
+months <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
 urls <- list()
 for(i in months) {
-  url <- paste0("http://content.caiso.com/green/renewrpt/2017", i, 15:22, "_DailyRenewablesWatch.txt")
+  url <- paste0("http://content.caiso.com/green/renewrpt/2017", i, days, "_DailyRenewablesWatch.txt")
   urls[[paste0("month", i)]] <- url
 }
 
@@ -49,6 +50,7 @@ import <- function(data) {
 
 jan <- do.call("rbind", lapply(urls[["month01"]], import))
 feb <- do.call("rbind", lapply(urls[["month02"]], import))
+march <- do.call("rbind", lapply(urls[["month03"]], import))
 june <- do.call("rbind", lapply(urls[["month6"]], import))
 july<- do.call("rbind", lapply(urls[["month07"]], import))
 oct <- do.call("rbind", lapply(urls[["month10"]], import))
@@ -61,6 +63,20 @@ The CAISO data are provided at hourly intervals. Plotting the data for the entir
 
 
 ```{r}
+library(zoo)
+#jan 2017 example plot
+jan[, -c(2)] %>%
+    read.zoo(FUN = identity) %>%
+    aggregate(as.Date, mean) %>%
+    fortify.zoo() %>%
+    select(Index, geothermal, biomass, biogas, small_hydro, wind, solar_pv, solar_thermal) %>%
+    gather(Renewable, mean, -Index) %>%
+    ggplot() + 
+    geom_line(mapping = aes(x= Index, y = mean, color = Renewable)) + labs(
+    title = "January 2017 Daily Averages",
+    x = "Date",
+    y = "Production (MW)"
+  )
 
 ```
 
