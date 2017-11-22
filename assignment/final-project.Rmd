@@ -49,11 +49,11 @@ import <- function(data) {
 }
 
 jan <- do.call("rbind", lapply(urls[["month01"]], import))
-feb <- do.call("rbind", lapply(urls[["month02"]], import))
-march <- do.call("rbind", lapply(urls[["month03"]], import))
-june <- do.call("rbind", lapply(urls[["month6"]], import))
-july<- do.call("rbind", lapply(urls[["month07"]], import))
-oct <- do.call("rbind", lapply(urls[["month10"]], import))
+#feb <- do.call("rbind", lapply(urls[["month02"]], import)) #feb doesn't have 31 days need fix 
+#march <- do.call("rbind", lapply(urls[["month03"]], import))
+#june <- do.call("rbind", lapply(urls[["month6"]], import))
+#july<- do.call("rbind", lapply(urls[["month07"]], import))
+#oct <- do.call("rbind", lapply(urls[["month10"]], import))
 
 ```
 
