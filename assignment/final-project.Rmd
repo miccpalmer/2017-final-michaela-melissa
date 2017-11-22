@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F)
 ```
 
 ```{r results='hide'}
-libs <- c("tidyverse", "readxl", "ggpubr", "foreign", "zoo")
+libs <- c("tidyverse", "readxl", "foreign", "zoo")
 sapply(libs, require, character.only=T)
 ```
 
@@ -55,7 +55,6 @@ The CAISO data are provided at hourly intervals. Plotting the data for the entir
 
 ```{r}
 month.list <- list(January=jan, Febuary = feb, June=june, July=july, October=oct)
-
 plot <- function(data, name) {
   data[,-c(2)] %>%
     read.zoo(FUN = identity) %>%
@@ -68,7 +67,8 @@ plot <- function(data, name) {
     labs(title = paste(name, "2017 Daily Averages", sep = " "), x = "Date", y = "Production (MW)") + theme_minimal()
 }
 
-Map(plot, data = month.list, name = names(month.list))
+plot.list <- Map(plot, data = month.list, name = names(month.list))
+plot.list
 ```
 
 ```{r}
