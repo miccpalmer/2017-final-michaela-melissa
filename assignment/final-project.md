@@ -7,7 +7,7 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F)
 ```
 
 ``` r
-libs <- c("tidyverse", "readxl", "ggpubr", "foreign", "zoo")
+libs <- c("tidyverse", "readxl", "foreign", "zoo")
 sapply(libs, require, character.only=T)
 ```
 
@@ -28,6 +28,8 @@ for (i in months) {
 }
 ```
 
+We are going to be reading in the CAISO data by month for 2017. However, We have to be aware that this is unverified raw data that contains errors. Consequently, we chose to remove March 2017 due to the error: "The supplied DateTime represents an invalid time. For example, when the clock is adjusted forward, any time in the period that is skipped is invalid."
+
 ``` r
 # function to import data with proper formatting & columns 
 import <- function(data) {
@@ -41,20 +43,45 @@ import <- function(data) {
 
 jan <- do.call("rbind", lapply(urls[["month01"]], import))
 feb <- do.call("rbind", lapply(urls[["month02"]], import)) 
-march <- do.call("rbind", lapply(urls[["month03"]], import)) 
+april <- do.call("rbind", lapply(urls[["month04"]], import)) 
+may <- do.call("rbind", lapply(urls[["month05"]], import)) 
 june <- do.call("rbind", lapply(urls[["month06"]], import))
-july<- do.call("rbind", lapply(urls[["month07"]], import))
+july <- do.call("rbind", lapply(urls[["month07"]], import))
+august <- do.call("rbind", lapply(urls[["month08"]], import))
 oct <- do.call("rbind", lapply(urls[["month10"]], import))
+nov <- do.call("rbind", lapply(urls[["month11"]], import))
 ```
+
+When reading in the dates from the urls, we tested out other regular expressions methods. These methods below work, but we decided to pursue a different method for sake of conciseness.
+
+``` r
+sub(".*(\\d{8}).*", "\\1", urls)
+```
+
+    ##  [1] "20170125" "20170225" "20170325" "20170425" "20170525" "20170625"
+    ##  [7] "20170725" "20170825" "20170925" "20171025" "20171125" "20171225"
+
+``` r
+sub(".*/", "", sub("_.*", "", urls))
+```
+
+    ##  [1] "20170101" "20170201" "20170301" "20170401" "20170501" "20170601"
+    ##  [7] "20170701" "20170801" "20170901" "20171001" "20171101" "20171201"
+
+``` r
+gsub("(?:.*/){4}([^_]+)_.*", "\\1", urls)
+```
+
+    ##  [1] "20170125" "20170225" "20170325" "20170425" "20170525" "20170625"
+    ##  [7] "20170725" "20170825" "20170925" "20171025" "20171125" "20171225"
 
 Daily average data plots
 ========================
 
-The CAISO data are provided at hourly intervals. Plotting the data for the entire 6-year period would have generated a very messy graph, so I calculated daily means and plotted them instead.
+The CAISO data are provided at hourly intervals. Plotting the data for the entire 6-year period would have generated a very messy graph, so we calculated daily means and plotted them.
 
 ``` r
-month.list <- list(January=jan, Febuary = feb, June=june, July=july, October=oct)
-
+month.list <- list(January=jan, Febuary = feb, April=april, May=may, June=june, July=july, August=august, October=oct, November=nov)
 plot <- function(data, name) {
   data[,-c(2)] %>%
     read.zoo(FUN = identity) %>%
@@ -64,41 +91,55 @@ plot <- function(data, name) {
     gather(Renewables, mean,-Index) %>%
     ggplot() +
     geom_line(mapping = aes(x = Index, y = mean, color = Renewables)) + 
-    labs(title = paste(name, "2017 Daily Averages", sep = " "), x = "Date", y = "Production (MW)") + theme_minimal()
+    labs(title = paste(name, "2017 Daily Averages", sep = " "), x = "Date", y = "Generation (MW)") + theme_minimal()
 }
 
-Map(plot, data = month.list, name = names(month.list))
+plot.list <- Map(plot, data = month.list, name = names(month.list))
+plot.list
 ```
 
     ## $January
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
     ## 
     ## $Febuary
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-4-2.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-5-2.png)
+
+    ## 
+    ## $April
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-5-3.png)
+
+    ## 
+    ## $May
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-5-4.png)
 
     ## 
     ## $June
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-4-3.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-5-5.png)
 
     ## 
     ## $July
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-4-4.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-5-6.png)
+
+    ## 
+    ## $August
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-5-7.png)
 
     ## 
     ## $October
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-4-5.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-5-8.png)
 
-``` r
-# other tested regex methods
-#sapply(strsplit(filelist, "[/_]"), "[", 6)
-#sub(".*(\\d{8}).*", "\\1", filelist)
-#sub(".*/", "", sub("_.*", "", filelist))
-#sub("_.*", "", basename(filelist))
-#gsub("(?:.*/){4}([^_]+)_.*", "\\1", filelist)
-```
+    ## 
+    ## $November
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-5-9.png)
+
+We are going to further explore seasonality/time series anaylsis because summer irradiance &gt; winter. Assumptions: -Jan-Feb = Winter -April-May = Spring -June-Aug = Summer -Oct-Nov = Fall

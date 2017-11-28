@@ -69,7 +69,7 @@ gsub("(?:.*/){4}([^_]+)_.*", "\\1", urls)
 The CAISO data are provided at hourly intervals. Plotting the data for the entire 6-year period would have generated a very messy graph, so we calculated daily means and plotted them.
 
 ```{r}
-month.list <- list(January=jan, Febuary = feb, June=june, July=july, October=oct)
+month.list <- list(January=jan, Febuary = feb, April=april, May=may, June=june, July=july, August=august, October=oct, November=nov)
 plot <- function(data, name) {
   data[,-c(2)] %>%
     read.zoo(FUN = identity) %>%
