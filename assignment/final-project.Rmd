@@ -16,6 +16,7 @@ sapply(libs, require, character.only=T)
 ## Read in data
 
 The data used in this analysis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html), which aggregates grid data from electricity producers in California.
+
 ```{r}
 # create and view an object with file names & full paths
 days <- c(paste0("0", 1:9), 10:25)
@@ -29,7 +30,9 @@ for (i in months) {
 
 ```
 
-###We are going to be reading in the CAISO data by month for 2017 and we have to be aware that this is unverified raw data that contains errors.  Consequently, we chose to remove March 2017 due to the error: "The supplied DateTime represents an invalid time.  For example, when the clock is adjusted forward, any time in the period that is skipped is invalid."
+We are going to be reading in the CAISO data by month for 2017. However, We have to be aware that this is unverified raw data that contains errors. 
+Consequently, we chose to remove March 2017 due to the error: "The supplied DateTime represents an invalid time.  For example, when the clock is adjusted forward, any time in the period that is skipped is invalid."
+
 ```{r }
 # function to import data with proper formatting & columns 
 import <- function(data) {
@@ -47,14 +50,23 @@ april <- do.call("rbind", lapply(urls[["month04"]], import))
 may <- do.call("rbind", lapply(urls[["month05"]], import)) 
 june <- do.call("rbind", lapply(urls[["month06"]], import))
 july <- do.call("rbind", lapply(urls[["month07"]], import))
-august <- do.call("rbind", lapply(urls[["month07"]], import))
+august <- do.call("rbind", lapply(urls[["month08"]], import))
 oct <- do.call("rbind", lapply(urls[["month10"]], import))
+nov <- do.call("rbind", lapply(urls[["month11"]], import))
+```
 
+When reading in the dates from the urls, we tested out other regular expressions methods. 
+These methods below work, but we decided to pursue a different method for sake of conciseness. 
+
+```{r}
+sub(".*(\\d{8}).*", "\\1", urls)
+sub(".*/", "", sub("_.*", "", urls))
+gsub("(?:.*/){4}([^_]+)_.*", "\\1", urls)
 ```
 
 # Daily average data plots
 
-The CAISO data are provided at hourly intervals. Plotting the data for the entire 6-year period would have generated a very messy graph, so I calculated daily means and plotted them instead.
+The CAISO data are provided at hourly intervals. Plotting the data for the entire 6-year period would have generated a very messy graph, so we calculated daily means and plotted them.
 
 ```{r}
 month.list <- list(January=jan, Febuary = feb, June=june, July=july, October=oct)
@@ -74,13 +86,15 @@ plot.list <- Map(plot, data = month.list, name = names(month.list))
 plot.list
 ```
 
+We are going to further explore seasonality/time series anaylsis because summer irradiance > winter.
+Assumptions:
+  -Jan-Feb = Winter
+  -April-May = Spring 
+  -June-Aug = Summer
+  -Oct-Nov = Fall 
+
 ```{r}
-# other tested regex methods
-#sapply(strsplit(filelist, "[/_]"), "[", 6)
-#sub(".*(\\d{8}).*", "\\1", filelist)
-#sub(".*/", "", sub("_.*", "", filelist))
-#sub("_.*", "", basename(filelist))
-#gsub("(?:.*/){4}([^_]+)_.*", "\\1", filelist)
+
 ```
 
 
