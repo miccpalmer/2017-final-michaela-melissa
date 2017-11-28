@@ -29,6 +29,7 @@ for (i in months) {
 
 ```
 
+###We are going to be reading in the CAISO data by month for 2017 and we have to be aware that this is unverified raw data that contains errors.  Consequently, we chose to remove March 2017 due to the error: "The supplied DateTime represents an invalid time.  For example, when the clock is adjusted forward, any time in the period that is skipped is invalid."
 ```{r }
 # function to import data with proper formatting & columns 
 import <- function(data) {
@@ -42,9 +43,11 @@ import <- function(data) {
 
 jan <- do.call("rbind", lapply(urls[["month01"]], import))
 feb <- do.call("rbind", lapply(urls[["month02"]], import)) 
-march <- do.call("rbind", lapply(urls[["month03"]], import)) 
+april <- do.call("rbind", lapply(urls[["month04"]], import)) 
+may <- do.call("rbind", lapply(urls[["month05"]], import)) 
 june <- do.call("rbind", lapply(urls[["month06"]], import))
-july<- do.call("rbind", lapply(urls[["month07"]], import))
+july <- do.call("rbind", lapply(urls[["month07"]], import))
+august <- do.call("rbind", lapply(urls[["month07"]], import))
 oct <- do.call("rbind", lapply(urls[["month10"]], import))
 
 ```
@@ -64,7 +67,7 @@ plot <- function(data, name) {
     gather(Renewables, mean,-Index) %>%
     ggplot() +
     geom_line(mapping = aes(x = Index, y = mean, color = Renewables)) + 
-    labs(title = paste(name, "2017 Daily Averages", sep = " "), x = "Date", y = "Production (MW)") + theme_minimal()
+    labs(title = paste(name, "2017 Daily Averages", sep = " "), x = "Date", y = "Generation (MW)") + theme_minimal()
 }
 
 plot.list <- Map(plot, data = month.list, name = names(month.list))
