@@ -3,8 +3,8 @@
 
 ## Team Members:
 
-- Michaela Palmer, mc-palmer
-- Melissa Ferriter, mferriter
+- Michaela Palmer, [mc-palmer] (https://github.com/mc-palmer)
+- Melissa Ferriter, [mferriter] (https://github.com/mferriter)
 
 ## About:
 
@@ -14,8 +14,7 @@ Throughout this project, we clean and aggregate data into useable forms, perform
 
 ## assignment
 
-All work for this assignment should be in the `assignment` directory.  You will work in the `.Rmd` notebook, and commit your rendered output files (`.md` and associated files) in the `assignment` directory as well.
-
+All work for this assignment should be in the `assignment` directory.  
 
 
 
