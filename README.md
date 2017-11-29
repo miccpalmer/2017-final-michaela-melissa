@@ -1,5 +1,5 @@
 
-## California ISO Electric Grid Data Analysis :sunny:
+## California ISO Electric Grid Data Analysis :zap:
 [![Build Status](https://travis-ci.com/espm-157/2017-final-michaela-melissa.svg?token=gtEiNqiCVUUeqagJypzy&branch=master)](https://travis-ci.com/espm-157/2017-final-michaela-melissa)
 
 ## Team Members:
