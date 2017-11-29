@@ -61,9 +61,11 @@ When reading in the dates from the urls, we tested out other regular expressions
 These regex methods below work, but we decided to pursue the `as.Date` function in base R for sake of conciseness. 
 
 ```{r}
-sub(".*(\\d{8}).*", "\\1", urls)
-sub(".*/", "", sub("_.*", "", urls))
-gsub("(?:.*/){4}([^_]+)_.*", "\\1", urls)
+sub(".*(\\d{8}).*", "\\1", urls[["month01"]])
+gsub("(?:.*/){4}([^_]+)_.*", "\\1", urls[["month01"]])
+gsub("\\D", "", urls[["month01"]])
+sub(".*/", "", sub("_.*", "", urls[["month01"]]))
+sub(".*(\\d{8}).*", "\\1", urls[["month01"]])
 ```
 
 # Daily average data plots - By Season
@@ -109,11 +111,11 @@ Map(plot, data = season.list, name = names(season.list))
 
 We can explore seasonality/time series analysis using these visualizations. 
 Summer irradiance > winter,
-Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to near-zero in the winter, just like solar only more pronounced. 
+Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to low generation in the winter, just like solar only more pronounced. 
 
 
 # Explore high-demand/peak periods during August and September.
-(Compare with baseload)
+Compare with baseload
 
 ```{r}
 

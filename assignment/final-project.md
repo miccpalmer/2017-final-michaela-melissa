@@ -57,28 +57,57 @@ nov <- do.call("rbind", lapply(urls[["month11"]], import))
 When reading in the dates from the urls, we tested out other regular expressions methods to access the year, month, a day from the `.txt` file. These regex methods below work, but we decided to pursue the `as.Date` function in base R for sake of conciseness.
 
 ``` r
-sub(".*(\\d{8}).*", "\\1", urls)
+sub(".*(\\d{8}).*", "\\1", urls[["month01"]])
 ```
 
-    ##  [1] "20170125" "20170225" "20170325" "20170425" "20170525" "20170625"
-    ##  [7] "20170725" "20170825" "20170925" "20171025" "20171125" "20171225"
+    ##  [1] "20170101" "20170102" "20170103" "20170104" "20170105" "20170106"
+    ##  [7] "20170107" "20170108" "20170109" "20170110" "20170111" "20170112"
+    ## [13] "20170113" "20170114" "20170115" "20170116" "20170117" "20170118"
+    ## [19] "20170119" "20170120" "20170121" "20170122" "20170123" "20170124"
+    ## [25] "20170125"
 
 ``` r
-sub(".*/", "", sub("_.*", "", urls))
+gsub("(?:.*/){4}([^_]+)_.*", "\\1", urls[["month01"]])
 ```
 
-    ##  [1] "20170101" "20170201" "20170301" "20170401" "20170501" "20170601"
-    ##  [7] "20170701" "20170801" "20170901" "20171001" "20171101" "20171201"
+    ##  [1] "20170101" "20170102" "20170103" "20170104" "20170105" "20170106"
+    ##  [7] "20170107" "20170108" "20170109" "20170110" "20170111" "20170112"
+    ## [13] "20170113" "20170114" "20170115" "20170116" "20170117" "20170118"
+    ## [19] "20170119" "20170120" "20170121" "20170122" "20170123" "20170124"
+    ## [25] "20170125"
 
 ``` r
-gsub("(?:.*/){4}([^_]+)_.*", "\\1", urls)
+gsub("\\D", "", urls[["month01"]])
 ```
 
-    ##  [1] "20170125" "20170225" "20170325" "20170425" "20170525" "20170625"
-    ##  [7] "20170725" "20170825" "20170925" "20171025" "20171125" "20171225"
+    ##  [1] "20170101" "20170102" "20170103" "20170104" "20170105" "20170106"
+    ##  [7] "20170107" "20170108" "20170109" "20170110" "20170111" "20170112"
+    ## [13] "20170113" "20170114" "20170115" "20170116" "20170117" "20170118"
+    ## [19] "20170119" "20170120" "20170121" "20170122" "20170123" "20170124"
+    ## [25] "20170125"
+
+``` r
+sub(".*/", "", sub("_.*", "", urls[["month01"]]))
+```
+
+    ##  [1] "20170101" "20170102" "20170103" "20170104" "20170105" "20170106"
+    ##  [7] "20170107" "20170108" "20170109" "20170110" "20170111" "20170112"
+    ## [13] "20170113" "20170114" "20170115" "20170116" "20170117" "20170118"
+    ## [19] "20170119" "20170120" "20170121" "20170122" "20170123" "20170124"
+    ## [25] "20170125"
+
+``` r
+sub(".*(\\d{8}).*", "\\1", urls[["month01"]])
+```
+
+    ##  [1] "20170101" "20170102" "20170103" "20170104" "20170105" "20170106"
+    ##  [7] "20170107" "20170108" "20170109" "20170110" "20170111" "20170112"
+    ## [13] "20170113" "20170114" "20170115" "20170116" "20170117" "20170118"
+    ## [19] "20170119" "20170120" "20170121" "20170122" "20170123" "20170124"
+    ## [25] "20170125"
 
 Daily average data plots - By Season
-====================================
+------------------------------------
 
 The CAISO data are provided at hourly intervals. Plotting the data for each month the entire 6-year period would have generated an overwhelmig number of graphs, so we first wrote a funcntion to calculate daily means and plot them.
 
@@ -137,4 +166,9 @@ Map(plot, data = season.list, name = names(season.list))
 
 ![](final-project_files/figure-markdown_github/unnamed-chunk-6-4.png)
 
-We can explore seasonality/time series analysis using these visualizations. Summer irradiance &gt; winter, Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to near-zero in the winter, just like solar only more pronounced.
+We can explore seasonality/time series analysis using these visualizations. Summer irradiance &gt; winter, Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to low generation in the winter, just like solar only more pronounced.
+
+Explore high-demand/peak periods during August and September.
+-------------------------------------------------------------
+
+Compare with baseload
