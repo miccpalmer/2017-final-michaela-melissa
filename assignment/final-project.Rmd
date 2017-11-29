@@ -32,7 +32,8 @@ for (i in months) {
 
 We are going to be reading in the CAISO data by month for 2017. However, We have to be aware that this is unverified raw data that contains errors. 
 Consequently, we chose to remove March 2017 due to the error: 
-*"The supplied DateTime represents an invalid time. For example, when the clock is adjusted forward, any time in the period that is skipped is invalid."*
+
+`"The supplied DateTime represents an invalid time. For example, when the clock is adjusted forward, any time in the period that is skipped is invalid."`
 
 ```{r }
 # Function to import data with proper formatting & columns 
