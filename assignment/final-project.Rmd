@@ -111,3 +111,11 @@ We can explore seasonality/time series analysis using these visualizations.
 Summer irradiance > winter,
 Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to near-zero in the winter, just like solar only more pronounced. 
 
+
+# Explore high-demand/peak periods during August and September.
+(Compare with baseload)
+
+```{r}
+
+```
+
