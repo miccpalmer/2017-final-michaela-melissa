@@ -3,8 +3,8 @@
 
 ## Team Members:
 
-- Michaela Palmer, [mc-palmer] (https://github.com/mc-palmer)
-- Melissa Ferriter, [mferriter] (https://github.com/mferriter)
+- Michaela Palmer, [mc-palmer](https://github.com/mc-palmer)
+- Melissa Ferriter, [mferriter](https://github.com/mferriter)
 
 ## About:
 
