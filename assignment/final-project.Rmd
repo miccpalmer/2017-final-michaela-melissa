@@ -68,7 +68,7 @@ sub(".*/", "", sub("_.*", "", urls[["month01"]]))
 sub(".*(\\d{8}).*", "\\1", urls[["month01"]])
 ```
 
-# Daily average data plots - By Season
+## Daily average data plots - By Season
 
 The CAISO data are provided at hourly intervals. Plotting the data for each month the entire 6-year period would have generated an overwhelmig number of graphs, so we first wrote a funcntion to calculate daily means and plot them.
 
@@ -114,7 +114,7 @@ Summer irradiance > winter,
 Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to low generation in the winter, just like solar only more pronounced. 
 
 
-# Explore high-demand/peak periods during August and September.
+## Explore high-demand/peak periods during August and September.
 Compare with baseload
 
 ```{r}
