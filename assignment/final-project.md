@@ -7,8 +7,14 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F)
 ```
 
 ``` r
-libs <- c("tidyverse", "readxl", "foreign", "zoo")
+libs <- c("tidyverse", "readxl", "foreign", "zoo", "ggpubr")
 sapply(libs, require, character.only=T)
+```
+
+``` r
+theme_set(theme_minimal()) # Set theme to theme_minimal as base
+# Edit somoe of the parameters in the minimal theme
+theme_update(plot.title = element_text(hjust=0.5))
 ```
 
 Data preparation and reading
@@ -122,8 +128,8 @@ plot <- function(data, name) {
     gather(Renewables, mean,-Index) %>%
     ggplot() +
     geom_line(mapping = aes(x = Index, y = mean, color = Renewables)) + 
-    labs(title = paste(name, "2017 Daily Averages", sep = " "), x = "Date", y = "Generation (MW)") + theme_minimal() +
-    theme(legend.position="bottom") + theme(plot.title = element_text(hjust=0.5))
+    labs(title = paste(name, "2017 Daily Averages", sep = " "), x = "Date", y = "Generation (MW)") +
+    theme(legend.position="bottom") 
 }
 #plot.list <- Map(plot, data = month.list, name = names(month.list))
 #plot.list
@@ -172,3 +178,77 @@ Explore high-demand/peak periods during August and September.
 -------------------------------------------------------------
 
 Compare with baseload
+
+Peak and Super Peak Generation by Source
+----------------------------------------
+
+Next we are going to explore which sources have the most output during peak (Jan-Feb 4-9pm) and super peak (July-Aug 4-9pm) time frames. We expect that some sources will maintain constant output, while others, such as solar, will experience varied output depending on month and time of day.
+
+``` r
+##vizualize how renewables change throughout the peak and super peak periods
+pk <- rbind(jan, feb)
+spk <- rbind(july, august)
+
+peak <- pk[, -c(1)] %>%
+    filter(hour >= 16, hour <= 21 ) %>%
+    group_by(hour) %>%
+    summarise_all(funs(mean)) %>%
+    gather(Renewables, mean, -hour) %>%
+    ggplot() +
+    geom_line(mapping = aes(x = hour, y = mean, color = Renewables)) + 
+    labs(title = "Peak Time Frame (Jan-Feb 4-9pm)", x = "Hour", y = "Generation (MW)") 
+
+super.peak <- spk[, -c(1)] %>%
+    filter(hour >= 16, hour <= 21 ) %>%
+    group_by(hour) %>%
+    summarise_all(funs(mean)) %>%
+    gather(Renewables, mean, -hour) %>%
+    ggplot() +
+    geom_line(mapping = aes(x = hour, y = mean, color = Renewables)) + 
+    labs(title = "Super Peak Time Frame (July-August 4-9pm)", x = "Hour", y = "Generation (MW)") 
+
+ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = T, legend = "bottom")
+```
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+``` r
+# Compare the averages over the peak and super peak time frames for each renewable
+peak.avg <- pk[, -c(1)] %>%
+    filter(hour >= 16, hour <= 21 ) %>%
+    select(everything(), -hour) %>%
+    summarise_all(funs(mean)) %>%
+    gather(Renewable, "Peak Mean")
+
+super.peak.avg <- spk[, -c(1)] %>%
+    filter(hour >= 16, hour <= 21 ) %>%
+    select(everything(), -hour) %>%
+    summarise_all(funs(mean)) %>%
+    gather(Renewable, "Super Peak Mean")
+
+final <- merge(peak.avg, super.peak.avg, by = "Renewable")
+final
+```
+
+    ##       Renewable  Peak Mean Super Peak Mean
+    ## 1        biogas  182.51333        172.7400
+    ## 2       biomass  205.38667        253.9900
+    ## 3    geothermal  947.87667        962.9433
+    ## 4   small_hydro  416.95667        579.7133
+    ## 5      solar_pv  717.37667       3983.2300
+    ## 6 solar_thermal   26.92667        229.8933
+    ## 7          wind 1261.70000       2490.7033
+
+``` r
+# Vizualization of Peak and Super Peak averages by renewable source
+final %>%
+  tidyr::gather(Time, Mean, -Renewable) %>%
+  ggplot(aes(x = Renewable, y = Mean, fill = Time)) + geom_bar(stat="identity", position = "dodge", width = 0.6) +
+  scale_fill_brewer(palette="Set1") + guides(fill=guide_legend("Period")) + 
+  labs(title = "Comparison Peak and Super Peak Renewable Generation",
+    x = "Renewable Source", 
+    y = "Generation (MW)") + 
+    theme(legend.position = c(0.2, 0.8))
+```
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-10-1.png)
