@@ -7,7 +7,7 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F)
 ```
 
 ``` r
-libs <- c("tidyverse", "readxl", "foreign", "zoo", "ggpubr")
+libs <- c("tidyverse", "foreign", "zoo", "ggpubr")
 sapply(libs, require, character.only=T)
 ```
 
@@ -55,7 +55,8 @@ april <- do.call("rbind", lapply(urls[["month04"]], import))
 may <- do.call("rbind", lapply(urls[["month05"]], import)) 
 june <- do.call("rbind", lapply(urls[["month06"]], import))
 july <- do.call("rbind", lapply(urls[["month07"]], import))
-august <- do.call("rbind", lapply(urls[["month08"]], import))
+aug <- do.call("rbind", lapply(urls[["month08"]], import))
+sept <- do.call("rbind", lapply(urls[["month09"]], import))
 oct <- do.call("rbind", lapply(urls[["month10"]], import))
 nov <- do.call("rbind", lapply(urls[["month11"]], import))
 ```
@@ -63,8 +64,10 @@ nov <- do.call("rbind", lapply(urls[["month11"]], import))
 Preparing processed data for archiving / publication
 ----------------------------------------------------
 
+description of data for public
+
 ``` r
-caiso17.full <- bind_rows(jan, feb, april, may, june, july, august, oct, nov)
+caiso17.full <- bind_rows(jan, feb, april, may, june, july, aug, sept, oct, nov)
 write.csv(caiso17.full, file = "CAISO.full_2017.csv", row.names = F)
 ```
 
@@ -148,7 +151,7 @@ We are going to categorize the months' data under the four seasons. Assumptions:
 -   Jan-Feb = Winter
 -   April-May = Spring
 -   June-Aug = Summer
--   Oct-Nov = Fall
+-   Sept-Nov = Fall
 
 We aggregated the months by these seasonal assumptions and plotted them below.
 
@@ -156,7 +159,7 @@ We aggregated the months by these seasonal assumptions and plotted them below.
 winter <- bind_rows(jan, feb)
 spring <- bind_rows(april, may)
 summer <- bind_rows(june, july)
-fall <- bind_rows(oct, nov)
+fall <- bind_rows(sept, oct, nov)
 season.list <- list(Winter=winter, Spring=spring, Summer=summer, Fall=fall)
 Map(plot, data = season.list, name = names(season.list))
 ```
@@ -185,7 +188,10 @@ We can explore seasonality/time series analysis using these visualizations. Summ
 Explore high-demand/peak periods during August and September.
 -------------------------------------------------------------
 
-Compare with baseload
+``` r
+#aug plot
+#sept plot
+```
 
 Peak and Super Peak Generation by Source
 ----------------------------------------
@@ -196,7 +202,7 @@ Next we are going to explore which sources have the most output during peak (Jan
 ##vizualize how renewables change throughout the peak and super peak periods
 
 pk <- bind_rows(jan, feb)
-spk <- bind_rows(july, august)
+spk <- bind_rows(july, aug)
 
 peak <- pk[, -c(1)] %>%
     filter(hour >= 16, hour <= 21 ) %>%
