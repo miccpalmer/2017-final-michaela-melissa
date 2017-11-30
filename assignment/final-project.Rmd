@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F)
 ```
 
 ```{r results='hide'}
-libs <- c("tidyverse", "readxl", "foreign", "zoo", "ggpubr", "cowplot", "gridExtra")
+libs <- c("tidyverse", "readxl", "foreign", "zoo", "ggpubr")
 sapply(libs, require, character.only=T)
 ```
 
@@ -132,7 +132,7 @@ spk <- rbind(july, august)
 peak <- pk[, -c(1)] %>%
     filter(hour >= 16, hour <= 21 ) %>%
     group_by(hour) %>%
-    summarise_each(funs(mean)) %>%
+    summarise_all(funs(mean)) %>%
     gather(Renewable, mean, -hour) %>%
     ggplot() +
     geom_line(mapping = aes(x = hour, y = mean, color = Renewable)) + 
@@ -140,12 +140,12 @@ peak <- pk[, -c(1)] %>%
 super.peak <- spk[, -c(1)] %>%
     filter(hour >= 16, hour <= 21 ) %>%
     group_by(hour) %>%
-    summarise_each(funs(mean)) %>%
+    summarise_all(funs(mean)) %>%
     gather(Renewable, mean, -hour) %>%
     ggplot() +
     geom_line(mapping = aes(x = hour, y = mean, color = Renewable)) + 
     labs(title = "Super Peak Time Frame (July-August 4-9pm)", x = "Hour", y = "Generation (MW)") + theme_minimal()
-ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = TRUE)
+ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = TRUE)
 ```
 
 ```{r}
@@ -153,12 +153,12 @@ ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, comm
 peak.avg <- pk[, -c(1)] %>%
     filter(hour >= 16, hour <= 21 ) %>%
     select(geothermal, biomass, biogas, small_hydro, wind, solar_pv, solar_thermal) %>%
-    summarise_each(funs(mean)) %>%
-    gather(Renewable, PeakMean)
+    summarise_all(funs(mean)) %>%
+    gather(Renewable, "Peak Mean")
 super.peak.avg <- spk[, -c(1)] %>%
     filter(hour >= 16, hour <= 21 ) %>%
     select(geothermal, biomass, biogas, small_hydro, wind, solar_pv, solar_thermal) %>%
-    summarise_each(funs(mean)) %>%
+    summarise_all(funs(mean)) %>%
     gather(Renewable, "Super Peak Mean")
 final <- merge(peak.avg, super.peak.avg, by = "Renewable")
 final
