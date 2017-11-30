@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F)
 ```
 
 ```{r results='hide'}
-libs <- c("tidyverse", "readxl", "foreign", "zoo")
+libs <- c("tidyverse", "readxl", "foreign", "zoo", "ggpubr", "cowplot", "gridExtra")
 sapply(libs, require, character.only=T)
 ```
 
@@ -97,4 +97,55 @@ Assumptions:
 
 ```
 
+Next we are going to explore which sources have the most output during peak (Jan-Feb 4-9pm) and super peak (July-Aug 4-9pm) time frames.  We expect that some sources will maintain constant output, while others, such as solar, will experience varied output depending on month and time of day. 
+
+```{r}
+##vizualize how renewables change throughout the peak and super peak periods
+pk <- rbind(jan, feb)
+spk <- rbind(july, august)
+peak <- pk[, -c(1)] %>%
+    filter(hour >= 16, hour <= 21 ) %>%
+    group_by(hour) %>%
+    summarise_each(funs(mean)) %>%
+    gather(Renewable, mean, -hour) %>%
+    ggplot() +
+    geom_line(mapping = aes(x = hour, y = mean, color = Renewable)) + 
+    labs(title = "Peak Time Frame (Jan-Feb 4-9pm)", x = "Hour", y = "Generation (MW)") + theme_minimal()
+super.peak <- spk[, -c(1)] %>%
+    filter(hour >= 16, hour <= 21 ) %>%
+    group_by(hour) %>%
+    summarise_each(funs(mean)) %>%
+    gather(Renewable, mean, -hour) %>%
+    ggplot() +
+    geom_line(mapping = aes(x = hour, y = mean, color = Renewable)) + 
+    labs(title = "Super Peak Time Frame (July-August 4-9pm)", x = "Hour", y = "Generation (MW)") + theme_minimal()
+ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = TRUE)
+```
+
+```{r}
+#compare the averages over the peak and super peak time frames for each renewable
+peak.avg <- pk[, -c(1)] %>%
+    filter(hour >= 16, hour <= 21 ) %>%
+    select(geothermal, biomass, biogas, small_hydro, wind, solar_pv, solar_thermal) %>%
+    summarise_each(funs(mean)) %>%
+    gather(Renewable, PeakMean)
+super.peak.avg <- spk[, -c(1)] %>%
+    filter(hour >= 16, hour <= 21 ) %>%
+    select(geothermal, biomass, biogas, small_hydro, wind, solar_pv, solar_thermal) %>%
+    summarise_each(funs(mean)) %>%
+    gather(Renewable, "Super Peak Mean")
+final <- merge(peak.avg, super.peak.avg, by = "Renewable")
+```
+
+```{r}
+#vizualization of Peak and Super Peak averages by renewable source
+final %>%
+  tidyr::gather(Time, Mean, -Renewable) %>%
+  ggplot(aes(x = Renewable, y = Mean, fill = Time)) + geom_bar(stat="identity", position = "dodge") +
+    scale_fill_brewer(palette="Set1") + guides(fill=guide_legend("Period")) + labs(
+     title = "Comparison Peak and Super Peak Renewable Generation",
+    x = "Renewable",
+    y = "Generation (MW)"
+  ) + theme(legend.position = "right", axis.text.x = element_text(angle = 45, hjust = 1), legend.text=element_text(size=7), legend.key.size = unit(.7, "line"), legend.title=element_text(size=10)) 
+```
 
