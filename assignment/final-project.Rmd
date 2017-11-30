@@ -63,6 +63,19 @@ oct <- do.call("rbind", lapply(urls[["month10"]], import))
 nov <- do.call("rbind", lapply(urls[["month11"]], import))
 ```
 
+
+
+```{r}
+#machine learning prediction for march?
+
+#predict 
+```
+
+
+
+
+
+
 ## Preparing processed data for archiving / publication
 description of data for public
 
@@ -119,7 +132,7 @@ We aggregated the months by these seasonal assumptions and plotted them below.
 ```{r}
 winter <- bind_rows(jan, feb)
 spring <- bind_rows(april, may)
-summer <- bind_rows(june, july)
+summer <- bind_rows(june, july, aug)
 fall <- bind_rows(sept, oct, nov)
 season.list <- list(Winter=winter, Spring=spring, Summer=summer, Fall=fall)
 Map(plot, data = season.list, name = names(season.list))

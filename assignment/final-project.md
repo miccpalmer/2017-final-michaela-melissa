@@ -61,6 +61,12 @@ oct <- do.call("rbind", lapply(urls[["month10"]], import))
 nov <- do.call("rbind", lapply(urls[["month11"]], import))
 ```
 
+``` r
+#machine learning prediction for march?
+
+#predict march and dec
+```
+
 Preparing processed data for archiving / publication
 ----------------------------------------------------
 
@@ -158,7 +164,7 @@ We aggregated the months by these seasonal assumptions and plotted them below.
 ``` r
 winter <- bind_rows(jan, feb)
 spring <- bind_rows(april, may)
-summer <- bind_rows(june, july)
+summer <- bind_rows(june, july, aug)
 fall <- bind_rows(sept, oct, nov)
 season.list <- list(Winter=winter, Spring=spring, Summer=summer, Fall=fall)
 Map(plot, data = season.list, name = names(season.list))
@@ -166,22 +172,22 @@ Map(plot, data = season.list, name = names(season.list))
 
     ## $Winter
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
     ## 
     ## $Spring
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-7-2.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-8-2.png)
 
     ## 
     ## $Summer
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-7-3.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-8-3.png)
 
     ## 
     ## $Fall
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-7-4.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-8-4.png)
 
 We can explore seasonality/time series analysis using these visualizations. Summer irradiance &gt; winter, Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to low generation in the winter, just like solar only more pronounced.
 
@@ -225,7 +231,7 @@ super.peak <- spk[, -c(1)] %>%
 ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = T, legend = "bottom")
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 ``` r
 # Compare the averages over the peak and super peak time frames for each renewable
@@ -266,4 +272,4 @@ final %>%
     theme(legend.position = c(0.2, 0.8))
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-12-1.png)
