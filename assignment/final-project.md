@@ -60,6 +60,14 @@ oct <- do.call("rbind", lapply(urls[["month10"]], import))
 nov <- do.call("rbind", lapply(urls[["month11"]], import))
 ```
 
+Preparing processed data for archiving / publication
+----------------------------------------------------
+
+``` r
+caiso17.full <- bind_rows(jan, feb, april, may, june, july, august, oct, nov)
+write.csv(caiso17.full, file = "CAISO.full_2017.csv", row.names = F)
+```
+
 When reading in the dates from the urls, we tested out other regular expressions methods to access the year, month, a day from the `.txt` file. These regex methods below work, but we decided to pursue the `as.Date` function in base R for sake of conciseness.
 
 ``` r
@@ -155,22 +163,22 @@ Map(plot, data = season.list, name = names(season.list))
 
     ## $Winter
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
     ## 
     ## $Spring
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-6-2.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-7-2.png)
 
     ## 
     ## $Summer
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-6-3.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-7-3.png)
 
     ## 
     ## $Fall
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-6-4.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-7-4.png)
 
 We can explore seasonality/time series analysis using these visualizations. Summer irradiance &gt; winter, Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to low generation in the winter, just like solar only more pronounced.
 
@@ -186,8 +194,9 @@ Next we are going to explore which sources have the most output during peak (Jan
 
 ``` r
 ##vizualize how renewables change throughout the peak and super peak periods
-pk <- rbind(jan, feb)
-spk <- rbind(july, august)
+
+pk <- bind_rows(jan, feb)
+spk <- bind_rows(july, august)
 
 peak <- pk[, -c(1)] %>%
     filter(hour >= 16, hour <= 21 ) %>%
@@ -210,7 +219,7 @@ super.peak <- spk[, -c(1)] %>%
 ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = T, legend = "bottom")
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 ``` r
 # Compare the averages over the peak and super peak time frames for each renewable
@@ -251,4 +260,4 @@ final %>%
     theme(legend.position = c(0.2, 0.8))
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-11-1.png)
