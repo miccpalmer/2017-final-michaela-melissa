@@ -126,7 +126,7 @@ Demand/peak periods during August and September.
 aug %>%
   filter(hour >= 16, hour <= 21 ) %>%
   plot(name = "August: Peak Demand (4-9pm)")  
-plot(aug, name = "Sugust 24hr")
+plot(aug, name = "August 24hr")
 
 sept %>%
   filter(hour >= 16, hour <= 21 ) %>%
