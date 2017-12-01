@@ -132,10 +132,9 @@ sub(".*(\\d{8}).*", "\\1", urls[["month01"]])
 Daily average data plots - By Season
 ------------------------------------
 
-The CAISO data are provided at hourly intervals. Plotting the data for each month the entire 6-year period would have generated an overwhelmig number of graphs, so we first wrote a funcntion to calculate daily means and plot them.
+The CAISO data are provided at hourly intervals. Plotting the data for each month the entire 6-year period would have generated an overwhelming number of graphs, so we first wrote a funcntion to calculate daily means and plot them.
 
 ``` r
-#month.list <- list(January=jan, Febuary = feb, April=april, May=may, June=june, July=july, August=august, October=oct, November=nov)
 plot <- function(data, name) {
   data[,-c(2)] %>%
     read.zoo(FUN = identity) %>%
@@ -148,11 +147,42 @@ plot <- function(data, name) {
     labs(title = paste(name, "2017 Daily Averages", sep = " "), x = "Date", y = "Generation (MW)") +
     theme(legend.position="bottom") 
 }
-#plot.list <- Map(plot, data = month.list, name = names(month.list))
-#plot.list
 ```
 
-We are going to categorize the months' data under the four seasons. Assumptions:
+Explore high-demand/peak periods during August and September.
+-------------------------------------------------------------
+
+Demand/peak periods during August and September.
+
+``` r
+aug %>%
+  filter(hour >= 16, hour <= 21 ) %>%
+  plot(name = "August: Peak Demand (4-9pm)")  
+```
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+``` r
+plot(aug, name = "Sugust 24hr")
+```
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-8-2.png)
+
+``` r
+sept %>%
+  filter(hour >= 16, hour <= 21 ) %>%
+  plot(name = "September: Peak Demand (4-9pm)")  
+```
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-8-3.png)
+
+``` r
+plot(sept, name = "September 24hr")
+```
+
+![](final-project_files/figure-markdown_github/unnamed-chunk-8-4.png)
+
+Next, we are going to categorize the months' data under the four seasons. Assumptions:
 
 -   Jan-Feb = Winter
 -   April-May = Spring
@@ -172,32 +202,24 @@ Map(plot, data = season.list, name = names(season.list))
 
     ## $Winter
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
     ## 
     ## $Spring
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-8-2.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-9-2.png)
 
     ## 
     ## $Summer
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-8-3.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-9-3.png)
 
     ## 
     ## $Fall
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-8-4.png)
+![](final-project_files/figure-markdown_github/unnamed-chunk-9-4.png)
 
 We can explore seasonality/time series analysis using these visualizations. Summer irradiance &gt; winter, Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to low generation in the winter, just like solar only more pronounced.
-
-Explore high-demand/peak periods during August and September.
--------------------------------------------------------------
-
-``` r
-#aug plot
-#sept plot
-```
 
 Peak and Super Peak Generation by Source
 ----------------------------------------
