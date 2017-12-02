@@ -64,27 +64,69 @@ nov <- do.call("rbind", lapply(urls[["month11"]], import))
 ```
 
 
-
-```{r}
-#machine learning prediction for march?
-
-#predict march and dec
-```
-
-
-
-
-
-
 ## Preparing processed data for archiving / publication
+
 description of data for public
-
-
 
 ```{r}
 caiso17.full <- bind_rows(jan, feb, april, may, june, july, aug, sept, oct, nov)
 write.csv(caiso17.full, file = "CAISO.full_2017.csv", row.names = F)
 ```
+
+
+To solve for the missing data issue, we are going to generate randome values from the min and max of generation of the other spring months values, April and May. 
+```{r}
+# i cant get the last function to work SOS CARL AND DANA
+
+april %>%
+  select(everything(), -hour, -date) %>%
+  lapply(min) -> april.mins
+may %>% 
+  select(everything(), -hour, -date) %>%
+  lapply(min) -> may.mins
+april %>% 
+select(everything(), -hour, -date) %>%
+  lapply(max) -> april.maxs
+may %>%
+  select(everything(), -hour, -date) %>%
+  lapply(max) -> may.maxs
+
+mins <- bind_rows(april.mins, may.mins)
+maxs <- bind_rows(april.maxs, may.maxs)
+
+mins <- lapply(mins, mean)
+maxs <- lapply(maxs, mean)
+
+
+vals <- function(source){
+  runif(600, min = mins$source, max = maxs$source) 
+}
+
+vals <- function(source){ 
+  runif(600, min = mins[source], max = maxs[source])
+}
+
+# doesnt work 
+
+#vals(geothermal) 
+
+runif(600, min = mins$biogas, max = maxs$biogas) #it works manually
+
+
+#round(, 0)
+
+#date <- 
+#hours <- c(1:24)
+
+#march <- data.frame(march, col_names = c("date", "hour", "geothermal", "biomass", "biogas", "small_hydro", "wind", "solar_pv", "solar_thermal"))
+
+```
+
+
+
+
+
+
 
 When reading in the dates from the urls, we tested out other regular expressions methods to access the year, month, a day from the `.txt` file. 
 These regex methods below work, but we decided to pursue the `as.Date` function in base R for sake of conciseness. 
