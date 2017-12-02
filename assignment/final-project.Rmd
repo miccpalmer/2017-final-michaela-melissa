@@ -107,12 +107,6 @@ march2 <- as.data.frame(lapply(sources, vals), col.names = sources)
 march <- bind_cols(march, march2)
 ```
 
-
-
-
-
-
-
 When reading in the dates from the urls, we tested out other regular expressions methods to access the year, month, a day from the `.txt` file. 
 These regex methods below work, but we decided to pursue the `as.Date` function in base R for sake of conciseness. 
 
