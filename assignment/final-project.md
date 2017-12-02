@@ -61,20 +61,38 @@ oct <- do.call("rbind", lapply(urls[["month10"]], import))
 nov <- do.call("rbind", lapply(urls[["month11"]], import))
 ```
 
-``` r
-#machine learning prediction for march?
-
-#predict march and dec
-```
-
-Preparing processed data for archiving / publication
-----------------------------------------------------
-
-description of data for public
+To solve for the missing data issue in March, we are going to generate random values using the min and max generation values of the other spring months values, April and May.
 
 ``` r
-caiso17.full <- bind_rows(jan, feb, april, may, june, july, aug, sept, oct, nov)
-write.csv(caiso17.full, file = "CAISO.full_2017.csv", row.names = F)
+april %>%
+  select(everything(), -hour, -date) %>%
+  lapply(min) -> april.mins
+may %>% 
+  select(everything(), -hour, -date) %>%
+  lapply(min) -> may.mins
+april %>% 
+select(everything(), -hour, -date) %>%
+  lapply(max) -> april.maxs
+may %>%
+  select(everything(), -hour, -date) %>%
+  lapply(max) -> may.maxs
+
+mins <- bind_rows(april.mins, may.mins)
+maxs <- bind_rows(april.maxs, may.maxs)
+mins <- lapply(mins, mean)
+maxs <- lapply(maxs, mean)
+
+vals <- function(source){
+  round(runif(600, min = mins[[source]], max = maxs[[source]]),0)
+}
+
+sources <- c("geothermal", "biomass", "biogas", "small_hydro", "wind", "solar_pv", "solar_thermal")
+march <- data.frame(date = seq(as.Date("2017-03-01"), as.Date("2017-03-26"), length.out = 601)) %>%
+    slice(1:600)
+march["hour"] <- c(1:24)
+
+march2 <- as.data.frame(lapply(sources, vals), col.names = sources)
+march <- bind_cols(march, march2)
 ```
 
 When reading in the dates from the urls, we tested out other regular expressions methods to access the year, month, a day from the `.txt` file. These regex methods below work, but we decided to pursue the `as.Date` function in base R for sake of conciseness.
@@ -129,6 +147,16 @@ sub(".*(\\d{8}).*", "\\1", urls[["month01"]])
     ## [19] "20170119" "20170120" "20170121" "20170122" "20170123" "20170124"
     ## [25] "20170125"
 
+Preparing processed data for archiving / publication
+----------------------------------------------------
+
+description of data for public
+
+``` r
+caiso17.full <- bind_rows(jan, feb, march, april, may, june, july, aug, sept, oct, nov)
+write.csv(caiso17.full, file = "CAISO.full_2017.csv", row.names = F)
+```
+
 Daily average data plots - By Season
 ------------------------------------
 
@@ -163,7 +191,7 @@ aug %>%
 ![](final-project_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 ``` r
-plot(aug, name = "Sugust 24hr")
+plot(aug, name = "August 24hr")
 ```
 
 ![](final-project_files/figure-markdown_github/unnamed-chunk-8-2.png)
@@ -227,7 +255,7 @@ Peak and Super Peak Generation by Source
 Next we are going to explore which sources have the most output during peak (Jan-Feb 4-9pm) and super peak (July-Aug 4-9pm) time frames. We expect that some sources will maintain constant output, while others, such as solar, will experience varied output depending on month and time of day.
 
 ``` r
-##vizualize how renewables change throughout the peak and super peak periods
+## vizualize how renewables change throughout the peak and super peak periods
 
 pk <- bind_rows(jan, feb)
 spk <- bind_rows(july, aug)
