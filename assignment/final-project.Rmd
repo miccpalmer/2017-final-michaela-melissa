@@ -76,8 +76,6 @@ write.csv(caiso17.full, file = "CAISO.full_2017.csv", row.names = F)
 
 To solve for the missing data issue, we are going to generate randome values from the min and max of generation of the other spring months values, April and May. 
 ```{r}
-# i cant get the last function to work SOS CARL AND DANA
-
 april %>%
   select(everything(), -hour, -date) %>%
   lapply(min) -> april.mins
@@ -99,27 +97,14 @@ maxs <- lapply(maxs, mean)
 
 
 vals <- function(source){
-  runif(600, min = mins$source, max = maxs$source) 
+  round(runif(600, min = mins[[source]], max = maxs[[source]]),0)
 }
 
-vals <- function(source){ 
-  runif(600, min = mins[source], max = maxs[source])
-}
+sources <- c("geothermal", "biomass", "biogas", "small_hydro", "wind", "solar_pv", "solar_thermal")
 
-# doesnt work 
-
-#vals(geothermal) 
-
-runif(600, min = mins$biogas, max = maxs$biogas) #it works manually
-
-
-#round(, 0)
-
-#date <- 
-#hours <- c(1:24)
-
-#march <- data.frame(march, col_names = c("date", "hour", "geothermal", "biomass", "biogas", "small_hydro", "wind", "solar_pv", "solar_thermal"))
-
+march <- data.frame(date = seq(as.Date("2017-03-01"), as.Date("2017-03-25"), length.out = 600), hour = c(1:24))
+march2 <- as.data.frame(lapply(sources, vals), col.names = sources)
+march <- bind_cols(march, march2)
 ```
 
 
