@@ -32,9 +32,16 @@ for (i in months) {
   url <- paste0("http://content.caiso.com/green/renewrpt/2017", i, days,"_DailyRenewablesWatch.txt")
   urls[[paste0("month", i)]] <- url
 }
+
+# Decemeber still in progress, can only partially import. 
+dec_days <- c(paste0("0", 1:8))
+dec_url <- paste0("http://content.caiso.com/green/renewrpt/2017", 12, dec_days,"_DailyRenewablesWatch.txt")
+
+# Import Dec 2016 for seasonal analysis later on
+dec2016 <- paste0("http://content.caiso.com/green/renewrpt/2016", 12, days,"_DailyRenewablesWatch.txt")
 ```
 
-We are going to be reading in the CAISO data by month for 2017. However, We have to be aware that this is unverified raw data that contains errors. Consequently, we chose to remove March 2017 due to the error:
+We are going to be reading in the CAISO data by each month for 2017. However, We have to be aware that this is unverified raw data that contains errors. Consequently, we chose to not read in March 2017 due to the error:
 
 `"The supplied DateTime represents an invalid time. For example, when the clock is adjusted forward, any time in the period that is skipped is invalid."`
 
@@ -59,40 +66,21 @@ aug <- do.call("rbind", lapply(urls[["month08"]], import))
 sept <- do.call("rbind", lapply(urls[["month09"]], import))
 oct <- do.call("rbind", lapply(urls[["month10"]], import))
 nov <- do.call("rbind", lapply(urls[["month11"]], import))
+dec <- do.call("rbind", lapply(dec_url, import))
+dec16 <- do.call("rbind", lapply(dec2016, import))
 ```
 
-To solve for the missing data issue in March, we are going to generate random values using the min and max generation values of the other spring months values, April and May.
+To solve for the missing data issue in March, we would ideally use an ARIMA model based on 2015 and 2016 values for March.
 
 ``` r
-april %>%
-  select(everything(), -hour, -date) %>%
-  lapply(min) -> april.mins
-may %>% 
-  select(everything(), -hour, -date) %>%
-  lapply(min) -> may.mins
-april %>% 
-select(everything(), -hour, -date) %>%
-  lapply(max) -> april.maxs
-may %>%
-  select(everything(), -hour, -date) %>%
-  lapply(max) -> may.maxs
+#library(forecast)
+#marchs <-bind_rows(march15, march16)
+#m<- ts(marchs)
+#m <-m[, -c(2)]
+#model <- auto.arima(m[1:2])
 
-mins <- bind_rows(april.mins, may.mins)
-maxs <- bind_rows(april.maxs, may.maxs)
-mins <- lapply(mins, mean)
-maxs <- lapply(maxs, mean)
-
-vals <- function(source){
-  round(runif(600, min = mins[[source]], max = maxs[[source]]),0)
-}
-
-sources <- c("geothermal", "biomass", "biogas", "small_hydro", "wind", "solar_pv", "solar_thermal")
-march <- data.frame(date = seq(as.Date("2017-03-01"), as.Date("2017-03-26"), length.out = 601)) %>%
-    slice(1:600)
-march["hour"] <- c(1:24)
-
-march2 <- as.data.frame(lapply(sources, vals), col.names = sources)
-march <- bind_cols(march, march2)
+#fcast <- forecast(model,h=length(marchs))
+#fcast
 ```
 
 When reading in the dates from the urls, we tested out other regular expressions methods to access the year, month, a day from the `.txt` file. These regex methods below work, but we decided to pursue the `as.Date` function in base R for sake of conciseness.
@@ -150,10 +138,11 @@ sub(".*(\\d{8}).*", "\\1", urls[["month01"]])
 Preparing processed data for archiving / publication
 ----------------------------------------------------
 
-description of data for public
+We aggregate all of the scrapped data into a single `csv.` file, intended to be used for publication or further processing.
+This `csv` contains an hourly breakdown of total production by resource type is given for Renewables (including Solar, Thermal, Solar, Wind, Small Hydro, Biogas, Biomass, and Geothermal), Nuclear, Thermal, Imports, and Hydro within the ISO grid from January to December 2017, with the exception of March. There is a column for each energy generation source, as well as a hour and date column (YYYY-MM-DD).
 
 ``` r
-caiso17.full <- bind_rows(jan, feb, march, april, may, june, july, aug, sept, oct, nov)
+caiso17.full <- bind_rows(jan, feb, april, may, june, july, aug, sept, oct, nov, dec)
 write.csv(caiso17.full, file = "CAISO.full_2017.csv", row.names = F)
 ```
 
@@ -210,25 +199,25 @@ plot(sept, name = "September 24hr")
 
 ![](final-project_files/figure-markdown_github/unnamed-chunk-8-4.png)
 
-Next, we are going to categorize the months' data under the four seasons. Assumptions:
+Next, we are going to categorize the months under the four seasons. The data begins in December 2016 and extends to November 2017. Assumptions:
 
--   Jan-Feb = Winter
--   April-May = Spring
--   June-Aug = Summer
--   Sept-Nov = Fall
+-   December - February -&gt; Winter
+-   April - May -&gt; Spring
+-   June - August -&gt; Summer
+-   September - November -&gt; Fall
 
 We aggregated the months by these seasonal assumptions and plotted them below.
 
 ``` r
-winter <- bind_rows(jan, feb)
+winter <- bind_rows(dec16, jan, feb)
 spring <- bind_rows(april, may)
 summer <- bind_rows(june, july, aug)
 fall <- bind_rows(sept, oct, nov)
-season.list <- list(Winter=winter, Spring=spring, Summer=summer, Fall=fall)
+season.list <- list("Winter 2016 -"=winter, Spring=spring, Summer=summer, Fall=fall)
 Map(plot, data = season.list, name = names(season.list))
 ```
 
-    ## $Winter
+    ## $`Winter 2016 -`
 
 ![](final-project_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
@@ -247,7 +236,7 @@ Map(plot, data = season.list, name = names(season.list))
 
 ![](final-project_files/figure-markdown_github/unnamed-chunk-9-4.png)
 
-We can explore seasonality/time series analysis using these visualizations. Summer irradiance &gt; winter, Magnitude of generation is the least in Winter, to be expected. An interesting feature of these plots that wind generation peaks around mid-year and decreases to low generation in the winter, just like solar only more pronounced.
+We can explore seasonality/time series analysis using these visualizations. WeWe are particulary interested in this analysis because summer irradiance &gt; winter irradiance, meaning that there should be greater generation in the summer months. The magnitude of generation is the least in Winter, to be expected. Another interesting feature of these plots is that that wind generation peaks around mid-year and decreases to low generation in the winter, similar to solar, but more pronounced.
 
 Peak and Super Peak Generation by Source
 ----------------------------------------
