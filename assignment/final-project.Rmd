@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = T, warning = F, message = F)
 libs <- c("tidyverse", "foreign", "zoo", "ggpubr", "forecast")
 sapply(libs, require, character.only=T)
 ```
-
+ 
 ```{r ggplot setup}
 theme_set(theme_minimal()) # Set theme to theme_minimal as base
 # Edit somoe of the parameters in the minimal theme
