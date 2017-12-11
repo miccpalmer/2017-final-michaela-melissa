@@ -1,7 +1,7 @@
 ---
 title: "California ISO Electric Grid Data Analysis"
 author: "Michaela Palmer & Melissa Ferriter"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=T}

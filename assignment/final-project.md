@@ -34,7 +34,7 @@ for (i in months) {
 }
 
 # Decemeber 2017 still in progress, can only partially import. 
-dec_days <- c(paste0("0", 1:8))
+dec_days <- c(paste0("0", 1:9))
 dec_url <- paste0("http://content.caiso.com/green/renewrpt/2017", 12, dec_days,"_DailyRenewablesWatch.txt")
 
 # Import December 2016 for seasonal analysis 
@@ -195,13 +195,13 @@ aug %>%
   plot(name = "August: Peak Demand (4-9pm)")  
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
 
 ``` r
 plot(aug, name = "August 24hr")
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-9-2.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-2.png)
 
 ``` r
 sept %>%
@@ -209,13 +209,13 @@ sept %>%
   plot(name = "September: Peak Demand (4-9pm)")  
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-9-3.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-3.png)
 
 ``` r
 plot(sept, name = "September 24hr")
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-9-4.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-4.png)
 
 Next, we are going to categorize the months under the four seasons. The data begins in December 2016 and extends to November 2017. Assumptions:
 
@@ -237,32 +237,32 @@ Map(plot, data = season.list, name = names(season.list))
 
     ## $`Winter 2016 -`
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
 
     ## 
     ## $Spring
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-10-2.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-2.png)
 
     ## 
     ## $Summer
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-10-3.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-3.png)
 
     ## 
     ## $Fall
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-10-4.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-4.png)
 
 We can explore seasonality/time series analysis using these visualizations. WeWe are particulary interested in this analysis because summer irradiance &gt; winter irradiance, meaning that there should be greater generation in the summer months. The magnitude of generation is the least in Winter, to be expected. Another interesting feature of these plots is that that wind generation peaks around mid-year and decreases to low generation in the winter, similar to solar, but more pronounced.
 
 Peak and Super Peak Generation by Source
 ----------------------------------------
 
-Next we are going to explore which sources have the most output during peak (Jan-Feb 4-9pm) and super peak (July-Aug 4-9pm) time frames. We expect that some sources will maintain constant output, while others, such as solar, will experience varied output depending on month and time of day.
+Next, we are going to explore which sources have the most output during peak (Jan-Feb 4-9pm) and super peak (July-Aug 4-9pm) time frames. We expect that some sources will maintain constant output, while others, such as solar, will experience varied output depending on month and time of day.
 
 ``` r
-## vizualize how renewables change throughout the peak and super peak periods
+## visualize how renewables change throughout the peak and super peak periods
 
 pk <- bind_rows(jan, feb)
 spk <- bind_rows(july, aug)
@@ -288,10 +288,12 @@ super.peak <- spk[, -c(1)] %>%
 ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = T, legend = "bottom")
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
+
+As evidenced by the graphs, it would be prudent to utilize a mix of both solar and wind energy during peak and super peak periods. We see that, as expected, solar is the most abundant source during light hours, and then wind takes over at approximately 5pm and 7pm in winter and summer respectively. Despite its intermittent nature, solar outperforms any current renewable in generation potential.
 
 ``` r
-# Compare the averages over the peak and super peak time frames for each renewable
+# compare the averages over the peak and super peak time frames for each renewable
 peak.avg <- pk[, -c(1)] %>%
     filter(hour >= 16, hour <= 21 ) %>%
     select(everything(), -hour) %>%
@@ -318,7 +320,7 @@ final
     ## 7          wind 1261.70000       2490.7033
 
 ``` r
-# Vizualization of Peak and Super Peak averages by renewable source
+# vizualization of peak and super peak averages by renewable source
 final %>%
   gather(Time, Mean, -Renewable) %>%
   ggplot(aes(x = Renewable, y = Mean, fill = Time)) + geom_bar(stat="identity", position = "dodge", width = 0.6) +
@@ -329,4 +331,6 @@ final %>%
     theme(legend.position = c(0.2, 0.8))
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png)
+
+This graph of renewable generation averaged over the whole peak and super peak time periods, is a way to more clearly visualize how resources vary throughout the year, both with itself and with the other renewables. It is evident that there is a huge disparity between winter and summer output for solar due to light availability, while geothermal remains a consistent source year-round. Similarly, small hydro is fairly consistent, although it generates much less electricity.
