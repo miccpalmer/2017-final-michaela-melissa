@@ -1,7 +1,7 @@
 ---
 title: "California ISO Electric Grid Data Analysis"
 author: "Michaela Palmer & Melissa Ferriter"
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=T}
@@ -197,11 +197,11 @@ Another interesting feature of these plots is that that wind generation peaks ar
 
 ## Peak and Super Peak Generation by Source 
 
-Next we are going to explore which sources have the most output during peak (Jan-Feb 4-9pm) and super peak (July-Aug 4-9pm) time frames.
-We expect that some sources will maintain constant output, while others, such as solar, will experience varied output depending on month and time of day. 
+Next, we are going to explore which sources have the most output during peak (Jan-Feb 4-9pm) and super peak (July-Aug 4-9pm) time frames.
+We expect that some sources will maintain constant output, while others, such as solar, will experience varied output depending on month and time of day.
 
 ```{r}
-## vizualize how renewables change throughout the peak and super peak periods
+## visualize how renewables change throughout the peak and super peak periods
 
 pk <- bind_rows(jan, feb)
 spk <- bind_rows(july, aug)
@@ -227,8 +227,10 @@ super.peak <- spk[, -c(1)] %>%
 ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = T, legend = "bottom")
 ```
 
+As evidenced by the graphs, it would be prudent to utilize a mix of both solar and wind energy during peak and super peak periods.  We see that, as expected, solar is the most abundant source during light hours, and then wind takes over at approximately 5pm and 7pm in winter and summer respectively.  Despite its intermittent nature, solar outperforms any current renewable in generation potential.
+
 ```{r}
-# Compare the averages over the peak and super peak time frames for each renewable
+# compare the averages over the peak and super peak time frames for each renewable
 peak.avg <- pk[, -c(1)] %>%
     filter(hour >= 16, hour <= 21 ) %>%
     select(everything(), -hour) %>%
@@ -246,7 +248,7 @@ final
 ```
 
 ```{r}
-# Vizualization of Peak and Super Peak averages by renewable source
+# vizualization of peak and super peak averages by renewable source
 final %>%
   gather(Time, Mean, -Renewable) %>%
   ggplot(aes(x = Renewable, y = Mean, fill = Time)) + geom_bar(stat="identity", position = "dodge", width = 0.6) +
@@ -257,5 +259,6 @@ final %>%
     theme(legend.position = c(0.2, 0.8))
 ```
 
+This graph of renewable generation averaged over the whole peak and super peak time periods, is a way to more clearly visualize how resources vary throughout the year, both with itself and with the other renewables.  It is evident that there is a huge disparity between winter and summer output for solar due to light availability, while geothermal remains a consistent source year-round.  Similarly, small hydro is fairly consistent, although it generates much less electricity.
 
 
