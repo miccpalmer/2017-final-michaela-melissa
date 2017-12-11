@@ -4,7 +4,7 @@
 
 ## Team Members:
 
-- Michaela Palmer, [micpalm](https://github.com/micpalm)
+- Michaela Palmer, [michpalmer](https://github.com/michpalmer)
 - Melissa Ferriter, [mferriter](https://github.com/mferriter)
 
 ## About:
