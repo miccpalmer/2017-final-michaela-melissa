@@ -19,7 +19,7 @@ theme_set(theme_minimal()) # Set theme to theme_minimal as base
 theme_update(plot.title = element_text(hjust=0.5))
 ```
 
-## Data preparation and reading
+## Data Preparation and Reading
 
 The data used in this analysis comes from [California Independent System Operator Corporation (CAISO)](http://www.caiso.com/green/renewableswatch.html), which aggregates grid data from electricity producers in California.
 
@@ -34,7 +34,7 @@ for (i in months) {
   urls[[paste0("month", i)]] <- url
 }
 
-# Decemeber 2017 still in progress, can only partially import. 
+# Decemeber 2017 still in progress, can only partially import 
 dec_days <- c(paste0("0", 1:9))
 dec_url <- paste0("http://content.caiso.com/green/renewrpt/2017", 12, dec_days,"_DailyRenewablesWatch.txt")
 
@@ -121,11 +121,11 @@ march <- dplyr::bind_cols(march, march.vals)
 march <- as.data.frame(march)
 ```
 
-## Preparing processed data for archiving / publication
+## Preparing Processed Data for Archiving/Publication
 
-We aggregate all of the scrapped data into a single `csv.` file, intended to be used for publication or further processing.   
-This `csv` contains an hourly breakdown of total production by resource type is given for Renewables (including Solar, Thermal, Solar, Wind, Small Hydro, Biogas, Biomass, and Geothermal), Nuclear, Thermal, Imports, and Hydro within the ISO grid from January to December 2017, with the exception of March. 
-There is a column for each energy generation source, as well as a hour  and date column (YYYY-MM-DD).
+We aggregate all of the scrapped/processed data into a single `csv.` file, intended to be used for publication or further processing.   
+This `csv` contains an hourly breakdown of total production by resource type given for Renewables (including Solar, Thermal, Solar, Wind, Small Hydro, Biogas, Biomass, and Geothermal), Nuclear, Thermal, Imports, and Hydro within the ISO grid from January to December 2017, with the exception of March. 
+There is a column for each energy generation source, as well as a hour (24hrs) and date column (YYYY-MM-DD).
 
 ```{r}
 caiso17.full <- dplyr::bind_rows(jan, feb, april, may, june, july, aug, sept, oct, nov, dec)
@@ -133,7 +133,7 @@ write.csv(caiso17.full, file = "CAISO.full_2017.csv", row.names = F)
 ```
 
 
-## Daily average data plots - By Season
+## Daily Average Data Plots - By season
 
 The CAISO data are provided at hourly intervals. Plotting the data for each month the entire 6-year period would have generated an overwhelming number of graphs, so we first wrote a funcntion to calculate daily means and plot them.
 
@@ -153,7 +153,7 @@ plot <- function(data, name) {
 ```
 
 
-## Explore high-demand/peak periods during August and September.
+## Exploring High-demand/Peak Periods during August and September.
 
 Demand/peak periods during August and September.
 
@@ -168,7 +168,6 @@ sept %>%
   plot(name = "September: Peak Demand (4-9pm)")  
 plot(sept, name = "September 24hr")
 ```
-
 
 Next, we are going to categorize the months under the four seasons.
 The data begins in December 2016 and extends to November 2017.
@@ -201,7 +200,7 @@ Next, we are going to explore which sources have the most output during peak (Ja
 We expect that some sources will maintain constant output, while others, such as solar, will experience varied output depending on month and time of day.
 
 ```{r}
-## visualize how renewables change throughout the peak and super peak periods
+# visualize how renewables change throughout the peak and super peak periods
 
 pk <- bind_rows(jan, feb)
 spk <- bind_rows(july, aug)
@@ -227,10 +226,12 @@ super.peak <- spk[, -c(1)] %>%
 ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = T, legend = "bottom")
 ```
 
-As evidenced by the graphs, it would be prudent to utilize a mix of both solar and wind energy during peak and super peak periods.  We see that, as expected, solar is the most abundant source during light hours, and then wind takes over at approximately 5pm and 7pm in winter and summer respectively.  Despite its intermittent nature, solar outperforms any current renewable in generation potential.
+As evidenced by the graphs, it would be prudent to utilize a mix of both solar and wind energy during peak and super peak periods.  
+We see that, as expected, solar is the most abundant source during light hours, and then wind takes over at approximately 5pm and 7pm in winter and summer respectively. 
+Despite its intermittent nature, solar outperforms any current renewable in generation potential.
 
 ```{r}
-# compare the averages over the peak and super peak time frames for each renewable
+# Compare the averages over the peak and super peak time frames for each renewable
 peak.avg <- pk[, -c(1)] %>%
     filter(hour >= 16, hour <= 21 ) %>%
     select(everything(), -hour) %>%
@@ -248,7 +249,7 @@ final
 ```
 
 ```{r}
-# vizualization of peak and super peak averages by renewable source
+# Vizualization of peak and super peak averages by renewable source
 final %>%
   gather(Time, Mean, -Renewable) %>%
   ggplot(aes(x = Renewable, y = Mean, fill = Time)) + geom_bar(stat="identity", position = "dodge", width = 0.6) +
@@ -259,6 +260,6 @@ final %>%
     theme(legend.position = c(0.2, 0.8))
 ```
 
-This graph of renewable generation averaged over the whole peak and super peak time periods, is a way to more clearly visualize how resources vary throughout the year, both with itself and with the other renewables.  It is evident that there is a huge disparity between winter and summer output for solar due to light availability, while geothermal remains a consistent source year-round.  Similarly, small hydro is fairly consistent, although it generates much less electricity.
+This graph of renewable generation averaged over the whole peak and super peak time periods, is a way to more clearly visualize how resources vary throughout the year, both with itself and with the other renewables.  It is evident that there is a huge disparity between winter and summer output for Solar due to light availability, while geothermal remains a consistent source year-round.  Similarly, Small Hydro is fairly consistent, although it generates much less production.
 
 
