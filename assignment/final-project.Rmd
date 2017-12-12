@@ -46,8 +46,9 @@ mar15 <- paste0("http://content.caiso.com/green/renewrpt/2015", "03", days,"_Dai
 mar16 <- paste0("http://content.caiso.com/green/renewrpt/2016", "03", days,"_DailyRenewablesWatch.txt")
 ```
 
-We are going to be reading in the CAISO data by each month for 2017. However, We have to be aware that this is unverified raw data that contains errors. 
-Consequently, we chose to not read in March 2017 due to the error: 
+We are going to be reading in the CAISO data by each month for 2017 into individual dataframes. 
+However, we have to be aware that this is unverified raw data that contains errors. 
+Consequently, we chose to not import March 2017 due to the error: 
 
 `"The supplied DateTime represents an invalid time. For example, when the clock is adjusted forward, any time in the period that is skipped is invalid."`
 
