@@ -1,15 +1,12 @@
 # Final project proposal
 
-
-Please prepare a short proposal on your final project idea for next **Thursday, Nov 2**. The proposal should include:
-
 # Title & description of the project
 **California ISO Electric Grid Data Analysis**
 
 ### Your name & partner's name
 
-- Michaela Palmer, mc-palmer
-- Melissa Ferriter, mferriter
+- Michaela Palmer, [michpalmer](https://github.com/michpalmer)
+- Melissa Ferriter, [mferriter](https://github.com/mferriter)
 
 ### A description of the data required, and how it will be obtained (e.g. URL/DOI to data source)
 
@@ -21,15 +18,10 @@ Please prepare a short proposal on your final project idea for next **Thursday, 
 ### 3 questions / analysis tasks you will perform on the data; in the spirit of the assignments we have been doing.
 
 - Clean and aggregate data into usuable forms (daily values --> dataframe per month)
-- EDA
 - Look at daily average renewables generation by source. 
 - Explore high-demand/peak periods during August and September. (Compare with baseload)
-- Explore seasonality/time series (summer irradiance > winter).
-- Quantify the load-following contribution from each of the main generation sources (demand vs generation -- Duck Curve)
-- Choropleth maps of substations to show the proportion of electric generation throughout CA.
-- Explore which renewable sources vary the most over days? months? years? (coefficient of variation)
-- Which sources have the most output during peak (Jan-Feb 4-9pm) and super peak (July-Aug 4-9pm) time frames. (Solar vs. Geothermal)
-
+- Explore seasonality/time series 
+- Which sources have the most output during Peak (Jan-Feb 4-9pm) and Super Peak (July-Aug 4-9pm) time frames. 
 
 ## Preliminary Rubric (additional areas will be added)
 
@@ -45,13 +37,13 @@ Please prepare a short proposal on your final project idea for next **Thursday, 
 
 ### and at least three of the following skills (this list may be modified/extended):
 
-- Use of at least 5 `dplyr` verbs / functions
-- Writing / working with custom R functions
+- **Use of at least 5 `dplyr` verbs / functions**
+- **Writing / working with custom R functions**
 - Creating an R package for functions used in the analysis
 - Interaction with an API
-- Use of regular expressions
+- **Use of regular expressions**
 - Use of an external relational database
-- Preparing processed data for archiving / publication
+- **Preparing processed data for archiving / publication**
 - Parsing extensible data formats (JSON, XML)
 - Use of spatial vector data (`sf` package) and visualization of spatial data
 - Creation of an R package
