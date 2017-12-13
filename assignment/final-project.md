@@ -45,7 +45,7 @@ mar15 <- paste0("http://content.caiso.com/green/renewrpt/2015", "03", days,"_Dai
 mar16 <- paste0("http://content.caiso.com/green/renewrpt/2016", "03", days,"_DailyRenewablesWatch.txt")
 ```
 
-We are going to be reading in the CAISO data by each month for 2017 into individual dataframes. However, we have to be aware that this is unverified raw data that contains errors. Consequently, we chose to not import March 2017 due to the warning:
+We are going to be reading in the daily CAISO data for 2017 and aggregating it by month into individual dataframes. However, we have to be aware that this is unverified raw data that contains errors. Consequently, we chose to not import March 2017 due to the warning:
 
 `"The supplied DateTime represents an invalid time. For example, when the clock is adjusted forward, any time in the period that is skipped is invalid."`
 
@@ -195,13 +195,13 @@ aug %>%
   plot(name = "August: Peak Demand (4-9pm)")  
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-1.png)
 
 ``` r
 plot(aug, name = "August 24hr")
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-9-2.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-2.png)
 
 ``` r
 sept %>%
@@ -209,13 +209,13 @@ sept %>%
   plot(name = "September: Peak Demand (4-9pm)")  
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-9-3.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-3.png)
 
 ``` r
 plot(sept, name = "September 24hr")
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-9-4.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-9-4.png)
 
 Next, we are going to categorize the months under the four seasons. The data begins in December 2016 and extends to November 2017. Assumptions:
 
@@ -237,22 +237,22 @@ Map(plot, data = season.list, name = names(season.list))
 
     ## $`Winter 2016 -`
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-10-1.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-1.png)
 
     ## 
     ## $Spring
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-10-2.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-2.png)
 
     ## 
     ## $Summer
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-10-3.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-3.png)
 
     ## 
     ## $Fall
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-10-4.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-10-4.png)
 
 We can explore seasonality/time series analysis using these visualizations. WeWe are particulary interested in this analysis because summer irradiance &gt; winter irradiance, meaning that there should be greater generation in the summer months. The magnitude of generation is the least in Winter, to be expected. Another interesting feature of these plots is that that wind generation peaks around mid-year and decreases to low generation in the winter, similar to solar, but more pronounced.
 
@@ -288,10 +288,10 @@ super.peak <- spk[, -c(1)] %>%
 ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow = 2, common.legend = T, legend = "bottom")
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-11-1.png)
 
 As evidenced by the graphs, it would be prudent to utilize a mix of both solar and wind energy during peak and super peak periods.
-We see that, as expected, solar is the most abundant source during light hours, and then wind takes over at approximately 5pm and 7pm in winter and summer respectively. Despite its intermittent nature, solar outperforms any current renewable in generation potential.
+We see that, as expected, solar is the most abundant source during daylight hours, and then wind becomes the dominant source at approximately 5pm and 7pm in winter and summer respectively. Despite its intermittent nature, solar outperforms any current renewable in generation potential.
 
 ``` r
 # Compare the averages over the peak and super peak time frames for each renewable
@@ -332,6 +332,6 @@ final %>%
     theme(legend.position = c(0.2, 0.8))
 ```
 
-![](final-project_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](final-project_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-13-1.png)
 
-This graph of renewable generation averaged over the whole peak and super peak time periods, is a way to more clearly visualize how resources vary throughout the year, both with itself and with the other renewables. It is evident that there is a huge disparity between winter and summer output for Solar due to light availability, while geothermal remains a consistent source year-round. Similarly, Small Hydro is fairly consistent, although it generates much less production.
+This graph of renewable generation averaged over peak and super peak time periods is a way to visualize how resources vary throughout the year, both within and between themselves. It is evident that there is a large disparity between winter and summer output for solar due to light availability, while geothermal remains a consistent source year-round. Similarly, Small Hydro is fairly consistent, although it generates much less electricity.

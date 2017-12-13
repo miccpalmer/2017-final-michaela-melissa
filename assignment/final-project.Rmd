@@ -46,7 +46,7 @@ mar15 <- paste0("http://content.caiso.com/green/renewrpt/2015", "03", days,"_Dai
 mar16 <- paste0("http://content.caiso.com/green/renewrpt/2016", "03", days,"_DailyRenewablesWatch.txt")
 ```
 
-We are going to be reading in the CAISO data by each month for 2017 into individual dataframes. 
+We are going to be reading in the daily CAISO data for 2017 and aggregating it by month into individual dataframes. 
 However, we have to be aware that this is unverified raw data that contains errors. 
 Consequently, we chose to not import March 2017 due to the warning: 
 
@@ -228,7 +228,7 @@ ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow =
 ```
 
 As evidenced by the graphs, it would be prudent to utilize a mix of both solar and wind energy during peak and super peak periods.  
-We see that, as expected, solar is the most abundant source during light hours, and then wind takes over at approximately 5pm and 7pm in winter and summer respectively. 
+We see that, as expected, solar is the most abundant source during daylight hours, and then wind becomes the dominant source at approximately 5pm and 7pm in winter and summer respectively. 
 Despite its intermittent nature, solar outperforms any current renewable in generation potential.
 
 ```{r}
@@ -261,7 +261,7 @@ final %>%
     theme(legend.position = c(0.2, 0.8))
 ```
 
-This graph of renewable generation averaged over the whole peak and super peak time periods, is a way to more clearly visualize how resources vary throughout the year, both with itself and with the other renewables. 
-It is evident that there is a huge disparity between winter and summer output for Solar due to light availability, while geothermal remains a consistent source year-round.  Similarly, Small Hydro is fairly consistent, although it generates much less production.
+This graph of renewable generation averaged over peak and super peak time periods is a way to visualize how resources vary throughout the year, both within and between themselves. 
+It is evident that there is a large disparity between winter and summer output for solar due to light availability, while geothermal remains a consistent source year-round.  Similarly, Small Hydro is fairly consistent, although it generates much less electricity.
 
 
