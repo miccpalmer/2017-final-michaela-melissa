@@ -229,7 +229,7 @@ ggpubr::ggarrange(peak + rremove("xlab") + rremove("x.text"), super.peak, nrow =
 
 As evidenced by the graphs, it would be prudent to utilize a mix of both solar and wind energy during peak and super peak periods.  
 We see that, as expected, solar is the most abundant source during daylight hours, and then wind becomes the dominant source at approximately 5pm and 7pm in winter and summer respectively. 
-Despite its intermittent nature, solar outperforms any current renewable in generation potential.
+Despite its intermittent nature, solar outperforms any current renewable in generation potential.    
 
 ```{r}
 # Compare the averages over the peak and super peak time frames for each renewable
@@ -255,7 +255,7 @@ final %>%
   gather(Time, Mean, -Renewable) %>%
   ggplot(aes(x = Renewable, y = Mean, fill = Time)) + geom_bar(stat="identity", position = "dodge", width = 0.6) +
   scale_fill_brewer(palette="Set1") + guides(fill=guide_legend("Period")) + 
-  labs(title = "Peak v. Super Peak Renewable Generation",
+  labs(title = "Peak vs Super Peak Renewable Generation",
     x = "Renewable Source", 
     y = "Generation (MW)") + 
     theme(legend.position = c(0.2, 0.8))

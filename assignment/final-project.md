@@ -326,7 +326,7 @@ final %>%
   gather(Time, Mean, -Renewable) %>%
   ggplot(aes(x = Renewable, y = Mean, fill = Time)) + geom_bar(stat="identity", position = "dodge", width = 0.6) +
   scale_fill_brewer(palette="Set1") + guides(fill=guide_legend("Period")) + 
-  labs(title = "Peak v. Super Peak Renewable Generation",
+  labs(title = "Peak vs Super Peak Renewable Generation",
     x = "Renewable Source", 
     y = "Generation (MW)") + 
     theme(legend.position = c(0.2, 0.8))
